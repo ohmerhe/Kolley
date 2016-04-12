@@ -43,12 +43,16 @@ class BaseRequest<D>(val context: Context) {
         _url = url
     }
 
-    fun params(makeParam: () -> Pairs) {
-        _params.putAll(makeParam().pairs)
+    fun params(makeParam: RequestPairs.() -> Unit) {
+        val requestPair = RequestPairs()
+        requestPair.makeParam()
+        _params.put(requestPair.pair!!)
     }
 
-    fun headers(makeHeaders: () -> Pairs) {
-        _headers.putAll(makeHeaders().pairs)
+    fun headers(makeHeader: RequestPairs.() -> Unit) {
+        val requestPair = RequestPairs()
+        requestPair.makeHeader()
+        _headers.put(requestPair.pair!!)
     }
 
     fun excute(){
@@ -66,10 +70,14 @@ class BaseRequest<D>(val context: Context) {
     }
 }
 
-class Pairs {
-    val pairs: MutableMap<String, String> = HashMap()
-    operator fun String.plus(value: String) {
-        pairs.put(this, value)
+fun <K,V> MutableMap<K,V>.put(pair: Pair<K, V>){
+    this.put(pair.first, pair.second)
+}
+
+class RequestPairs {
+    var pair: Pair<String, String>? = null
+    operator fun String.minus(value: String) {
+        pair = Pair(this, value)
     }
 }
 

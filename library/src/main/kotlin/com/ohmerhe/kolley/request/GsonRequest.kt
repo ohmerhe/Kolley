@@ -36,7 +36,7 @@ open class GsonRequest<D>
 
     @Throws(AuthFailureError::class)
     override fun getHeaders(): Map<String, String> {
-        return headers
+        return super.getHeaders()
     }
 
     override fun deliverResponse(response: D) {
