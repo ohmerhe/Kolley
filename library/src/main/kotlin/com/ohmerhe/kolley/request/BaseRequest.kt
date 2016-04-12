@@ -13,6 +13,7 @@ import java.util.*
  * Created by ohmer on 4/12/16.
  */
 class BaseRequest<D>(val context: Context) {
+    internal lateinit  var _request: GsonRequest<D>
     private var _method: Int = Request.Method.GET
     private var _start: (() -> Unit) = {}
     private var _finish: (() -> Unit) = {}
@@ -24,7 +25,7 @@ class BaseRequest<D>(val context: Context) {
     protected val _headers: MutableMap<String, String> = HashMap()
 
     fun start(onStart: () -> Unit) {
-        //todo:
+        _start = onStart
     }
 
     fun fail(onError: (VolleyError) -> Unit) {
@@ -35,12 +36,16 @@ class BaseRequest<D>(val context: Context) {
         _listener = Response.Listener(onSuccess)
     }
 
-    fun finish(onFinished: () -> Unit) {
-        //todo:
+    fun finish(onFinish: () -> Unit) {
+        _finish = onFinish
     }
 
     fun url(url: String){
         _url = url
+    }
+
+    fun method(method: Int){
+        _method = method
     }
 
     fun params(makeParam: RequestPairs.() -> Unit) {
@@ -56,12 +61,23 @@ class BaseRequest<D>(val context: Context) {
     }
 
     fun excute(){
-        val request = GsonRequest<D>(_method,_url,_type,_errorlistener)
-        request._start = _start
-        request._finish = _finish
-        request._listener = _listener
-        RequestManager.getRequestQueue(context).add(request)
+        var url = _url
+        if (Request.Method.GET == _method) {
+            url = getGetUrl(_url, _params) { it.toQueryString() }
+        }
+        _request = GsonRequest<D>(_method, url, _type, _errorlistener)
+        _request._start = _start
+        _request._finish = _finish
+        _request._listener = _listener
+        RequestManager.getRequestQueue(context).add(_request)
     }
+
+    private fun getGetUrl(url: String, params: MutableMap<String, String>, toQueryString: (map: Map<String, String>) ->
+    String): String {
+        return if (params == null || params.isEmpty()) url else "$url?${toQueryString(params)}"
+    }
+
+    private fun <K, V> Map<K, V>.toQueryString(): String = this.map { "${it.key}=${it.value}" }.joinToString("&")
 
     private fun log(msg: String) {
         if (BuildConfig.DEBUG) {
@@ -77,9 +93,10 @@ class RequestPairs {
     }
 }
 
-fun <D> request(context: Context, request: BaseRequest<D>.() -> Unit): BaseRequest<D> {
+fun <D> request(context: Context, method: Int = Request.Method.GET, request: BaseRequest<D>.() -> Unit): Request<D> {
     val baseRequest = BaseRequest<D>(context)
+    baseRequest.method(method)
     baseRequest.request()
     baseRequest.excute()
-    return baseRequest
+    return baseRequest._request
 }

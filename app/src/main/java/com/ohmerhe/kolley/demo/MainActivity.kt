@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
             params {
                 "q" - "shanghai"
+                "appid" - "d7a98cf22463b1c0c3df4adfe5abbc77"
             }
 
             success { weather ->
