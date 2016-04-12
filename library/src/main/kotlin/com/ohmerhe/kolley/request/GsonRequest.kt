@@ -13,26 +13,11 @@ import java.util.*
 /**
  * Created by ohmer on 9/20/15.
  */
-open class GsonRequest<D>
-/**
- * Make a GET request and return a parsed object from JSON.
-
- * @param url URL of the request to make
- * *
- * @param typeOfT Relevant class object, for Gson's reflection
- * *
- * @param headers Map of request headers
- */
-(method: Int
- , url: String
- , private val type: Type
- , errorListener: Response.ErrorListener? = Response.ErrorListener {}) : Request<D>(method, url, errorListener) {
+open class GsonRequest<D>(method: Int, url: String, private val type: Type
+                          , errorListener: Response.ErrorListener? = Response.ErrorListener {}) : Request<D>(method, url, errorListener) {
     private val gson = GsonBuilder().create()
     internal var _listener: Response.Listener<D>? = null
     protected val _params: MutableMap<String, String> = HashMap() // used for a POST or PUT request.
-
-    internal var _start: () -> Unit = {}
-    internal var _finish: () -> Unit = {}
 
     @Throws(AuthFailureError::class)
     override fun getHeaders(): Map<String, String> {

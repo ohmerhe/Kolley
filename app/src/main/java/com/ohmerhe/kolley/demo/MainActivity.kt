@@ -20,13 +20,17 @@ class MainActivity : AppCompatActivity() {
                 "appid" - "d7a98cf22463b1c0c3df4adfe5abbc77"
             }
 
+            start { Log.d("MainActivity", "on start") }
+
             success { weather ->
-                Log.d("MainActivity", weather.toString())
+                Log.d("MainActivity", "on success ${weather.toString()}")
             }
 
             fail { error ->
-                Log.d("MainActivity", error.toString())
+                Log.d("MainActivity", "on fail ${error.toString()}")
             }
+
+            finish { Log.d("MainActivity", "on finish") }
 
         }
     }
