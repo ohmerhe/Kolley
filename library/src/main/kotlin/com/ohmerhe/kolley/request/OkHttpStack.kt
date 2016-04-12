@@ -1,4 +1,4 @@
-package com.ohmerhe.kolley.http
+package com.ohmerhe.kolley.request
 
 import com.android.volley.toolbox.HurlStack
 import com.squareup.okhttp.OkHttpClient

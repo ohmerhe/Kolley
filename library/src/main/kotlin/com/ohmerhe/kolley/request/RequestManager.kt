@@ -1,9 +1,9 @@
-package com.ohmerhe.kolley.http
+package com.ohmerhe.kolley.request
 
 import android.content.Context
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
-import com.ohmerhe.kolley.http.OkHttpStack
+import com.ohmerhe.kolley.request.OkHttpStack
 import com.squareup.okhttp.OkHttpClient
 
 /**
