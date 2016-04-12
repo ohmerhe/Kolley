@@ -17,10 +17,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.+'
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
+    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'org.apache.httpcomponents:httpcore:4.4.3'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.jakewharton:disklrucache:2.0.2'
     testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
