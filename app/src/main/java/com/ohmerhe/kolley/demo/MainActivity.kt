@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
 
             url("http://api.openweathermap.org/data/2.5/weather")
 
+            modelType(Weather::class.java)
+
             params {
                 "q" - "shanghai"
                 "appid" - "d7a98cf22463b1c0c3df4adfe5abbc77"

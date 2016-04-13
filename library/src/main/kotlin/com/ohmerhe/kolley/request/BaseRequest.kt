@@ -49,6 +49,10 @@ class BaseRequest<D>(val context: Context) {
         _method = method
     }
 
+    fun modelType(type: Type){
+        _type = type
+    }
+
     fun params(makeParam: RequestPairs.() -> Unit) {
         val requestPair = RequestPairs()
         requestPair.makeParam()
