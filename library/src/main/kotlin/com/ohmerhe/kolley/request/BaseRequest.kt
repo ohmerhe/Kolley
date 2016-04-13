@@ -24,6 +24,7 @@ class BaseRequest<D>(val context: Context) {
     protected val _params: MutableMap<String, String> = HashMap() // used for a POST or PUT request.
 
     protected val _headers: MutableMap<String, String> = HashMap()
+    private var _tag: Any? = null
 
     fun start(onStart: () -> Unit) {
         _start = onStart
@@ -53,6 +54,10 @@ class BaseRequest<D>(val context: Context) {
         _type = type
     }
 
+    fun tag(tag: Any){
+        _tag = tag
+    }
+
     fun params(makeParam: RequestPairs.() -> Unit) {
         val requestPair = RequestPairs()
         requestPair.makeParam()
@@ -77,6 +82,9 @@ class BaseRequest<D>(val context: Context) {
         _request._listener = Response.Listener {
             _success(it)
             _finish()
+        }
+        if(_tag != null) {
+            _request.tag = _tag
         }
         RequestManager.getRequestQueue(context).add(_request)
         _start()
