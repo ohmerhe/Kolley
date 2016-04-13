@@ -103,10 +103,34 @@ class RequestPairs {
     }
 }
 
-fun <D> request(context: Context, method: Int = Request.Method.GET, request: BaseRequest<D>.() -> Unit): Request<D> {
+private fun <D> request(method: Int, context: Context, request: BaseRequest<D>.() -> Unit): Request<D> {
     val baseRequest = BaseRequest<D>(context)
     baseRequest.method(method)
     baseRequest.request()
     baseRequest.excute()
     return baseRequest._request
 }
+
+fun <D> get(context: Context, request: BaseRequest<D>.() -> Unit): Request<D> = request(Request.Method.GET, context, request)
+
+fun <D> post(context: Context, request: BaseRequest<D>.() -> Unit): Request<D> = request(Request.Method.POST, context,
+        request)
+
+fun <D> put(context: Context, request: BaseRequest<D>.() -> Unit): Request<D> = request(Request.Method.PUT, context,
+        request)
+
+fun <D> delete(context: Context, request: BaseRequest<D>.() -> Unit): Request<D> = request(Request.Method.DELETE, context,
+        request)
+
+fun <D> head(context: Context, request: BaseRequest<D>.() -> Unit): Request<D> = request(Request.Method.HEAD, context,
+        request)
+
+fun <D> options(context: Context, request: BaseRequest<D>.() -> Unit): Request<D> = request(Request.Method.OPTIONS,
+        context,
+        request)
+
+fun <D> trace(context: Context, request: BaseRequest<D>.() -> Unit): Request<D> = request(Request.Method.TRACE, context,
+        request)
+
+fun <D> patch(context: Context, request: BaseRequest<D>.() -> Unit): Request<D> = request(Request.Method.PATCH, context,
+        request)
