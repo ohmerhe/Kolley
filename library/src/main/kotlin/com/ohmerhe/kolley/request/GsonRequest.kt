@@ -5,40 +5,21 @@ import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
-import com.ohmerhe.kolley.BuildConfig
 import java.io.UnsupportedEncodingException
 import java.lang.reflect.Type
-import java.util.*
+import java.nio.charset.Charset
 
 /**
  * Created by ohmer on 9/20/15.
  */
 open class GsonRequest<D>(method: Int, url: String, private val type: Type
-                          , errorListener: Response.ErrorListener? = Response.ErrorListener {}) : Request<D>(method, url, errorListener) {
+                          , errorListener: Response.ErrorListener? = Response.ErrorListener {}) : BaseRequest<D>(method, url,
+        errorListener) {
     private val gson = GsonBuilder().create()
-    internal var _listener: Response.Listener<D>? = null
-    protected val _params: MutableMap<String, String> = HashMap() // used for a POST or PUT request.
-
-    @Throws(AuthFailureError::class)
-    override fun getHeaders(): Map<String, String> {
-        return super.getHeaders()
-    }
-
-    override fun deliverResponse(response: D) {
-        _listener?.onResponse(response)
-    }
-
-    /**
-     * Returns a Map of parameters to be used for a POST or PUT request.
-     * @return
-     */
-    public override fun getParams(): MutableMap<String, String> {
-        return _params
-    }
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<D> {
         try {
-            val json = response.data.toString()
+            val json = response.data.toString(Charset.defaultCharset())
             log("" + "response data = " + json)
             return Response.success(
                     gson.fromJson<D>(json, type),
@@ -51,11 +32,5 @@ open class GsonRequest<D>(method: Int, url: String, private val type: Type
             return Response.error<D>(ParseError(e))
         }
 
-    }
-
-    private fun log(msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.d(this.javaClass.simpleName, msg)
-        }
     }
 }

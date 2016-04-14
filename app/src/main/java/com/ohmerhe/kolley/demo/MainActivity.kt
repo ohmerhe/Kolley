@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.ohmerhe.kolley.request.get
+import java.nio.charset.Charset
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,11 +12,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        get<Weather>(this) {
+        get(this) {
 
             url("http://api.openweathermap.org/data/2.5/weather")
-
-            modelType(Weather::class.java)
 
             params {
                 "q" - "shanghai"
@@ -24,8 +23,8 @@ class MainActivity : AppCompatActivity() {
 
             start { Log.d("MainActivity", "on start") }
 
-            success { weather ->
-                Log.d("MainActivity", "on success ${weather.toString()}")
+            success { bytes ->
+                Log.d("MainActivity", "on success ${bytes.toString(Charset.defaultCharset())}")
             }
 
             fail { error ->
