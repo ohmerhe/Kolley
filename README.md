@@ -26,7 +26,7 @@ get(context) {
 
 ### Params
 
-params can be added with `"ket" - "value"` format in params block, each param must stay at single line.
+params can be added with `"key" - "value"` format in `params` block, each param must stay at single line.
 
 ```
 get(context) {
@@ -41,7 +41,7 @@ get(context) {
 
 ### Headers
 
-headers info can be added like params in headers block.
+headers info can be added like params in `headers` block.
 
 ```
 get(context) {
