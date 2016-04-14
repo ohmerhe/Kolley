@@ -4,28 +4,77 @@ Kolley is a kotlin RESTful http request framework which combine Volley with OkHt
 
 ## Usage
 
-start a http request,
+### Quick Start
+
+start a http request easily
 
 ```
 get(context) {
-
     url("http://api.openweathermap.org/data/2.5/weather")
-
     params {
         "q" - "shanghai"
         "appid" - "xxxx"
     }
-
-    start { Log.d(TAG, "on start") }
-
     success { bytes ->
-        Log.d(TAG, "on success ${bytes.toString()}")
+        // handle data
     }
-
     fail { error ->
-        Log.d(TAG, "on fail ${error.toString()}")
+        // handle error
     }
-    
-    finish { Log.d(TAG, "on finish") }
 }    
+```
+
+### Params
+
+params can be added with `"ket" - "value"` format in params block, each param must stay at single line.
+
+```
+get(context) {
+    ...
+    params {
+        "q" - "shanghai"
+        "appid" - "xxxx"
+    }
+    ...
+}
+```   
+
+### Headers
+
+headers info can be added like params in headers block.
+
+```
+get(context) {
+    ...
+    headers {
+        "Content-Type" - "application/json"
+    }
+    ...
+} 
+```
+
+### Cancel
+
+There two ways to cancel a request.
+
+- `Request` instance call cancel directly
+
+```
+val request = get(context){...}
+...
+request.cancel
+```
+
+- cancel with tag
+
+You can set tag for a request first, and then cancel it from `RequestQueue`.
+
+```
+get(context) {
+    ...
+    tag(tag)
+    ...
+}
+...
+RequestManager.getRequestQueue(context).cancelAll(tag)
 ```
