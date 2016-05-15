@@ -26,19 +26,19 @@ open class BaseRequestWapper(val context: Context) {
     protected val _headers: MutableMap<String, String> = HashMap()
     private var _tag: Any? = null
 
-    fun start(onStart: () -> Unit) {
+    fun onStart(onStart: () -> Unit) {
         _start = onStart
     }
 
-    fun fail(onError: (VolleyError) -> Unit) {
+    fun onFail(onError: (VolleyError) -> Unit) {
         _fail = onError
     }
 
-    fun success(onSuccess: (ByteArray) -> Unit) {
+    fun onSuccess(onSuccess: (ByteArray) -> Unit) {
         _success = onSuccess
     }
 
-    fun finish(onFinish: () -> Unit) {
+    fun onFinish(onFinish: () -> Unit) {
         _finish = onFinish
     }
 

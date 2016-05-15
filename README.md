@@ -15,10 +15,10 @@ get(context) {
         "q" - "shanghai"
         "appid" - "xxxx"
     }
-    success { bytes ->
+    onSuccess { bytes ->
         // handle data
     }
-    fail { error ->
+    onFail { error ->
         // handle error
     }
 }    

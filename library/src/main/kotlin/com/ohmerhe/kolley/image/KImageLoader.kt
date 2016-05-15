@@ -144,11 +144,11 @@ class ImageLoadRequest {
         _url = url
     }
 
-    fun fail(onError: (VolleyError) -> Unit) {
+    fun onFail(onError: (VolleyError) -> Unit) {
         _fail = onError
     }
 
-    fun success(onSuccess: (Bitmap) -> Unit) {
+    fun onSuccess(onSuccess: (Bitmap) -> Unit) {
         _success = onSuccess
     }
 

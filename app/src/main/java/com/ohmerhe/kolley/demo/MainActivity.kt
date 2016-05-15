@@ -24,17 +24,17 @@ class MainActivity : AppCompatActivity() {
                 "appid" - "d7a98cf22463b1c0c3df4adfe5abbc77"
             }
 
-            start { Log.d("MainActivity", "on start") }
+            onStart { Log.d("MainActivity", "on start") }
 
-            success { bytes ->
+            onSuccess { bytes ->
                 Log.d("MainActivity", "on success ${bytes.toString(Charset.defaultCharset())}")
             }
 
-            fail { error ->
+            onFail { error ->
                 Log.d("MainActivity", "on fail ${error.toString()}")
             }
 
-            finish { Log.d("MainActivity", "on finish") }
+            onFinish { Log.d("MainActivity", "on finish") }
 
         }
 
