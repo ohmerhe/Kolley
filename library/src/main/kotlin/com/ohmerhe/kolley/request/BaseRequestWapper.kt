@@ -21,7 +21,6 @@ open class BaseRequestWapper(val context: Context) {
     private var _fail: (VolleyError) -> Unit = {}
     private var _finish: (() -> Unit) = {}
     private var _url: String = ""
-    private var _type: Type = String::class.java
     protected val _params: MutableMap<String, String> = HashMap() // used for a POST or PUT request.
 
     protected val _headers: MutableMap<String, String> = HashMap()
