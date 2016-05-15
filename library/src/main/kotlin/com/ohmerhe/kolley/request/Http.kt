@@ -3,9 +3,12 @@ package com.ohmerhe.kolley.request
 import android.content.Context
 import android.util.Log
 import com.android.volley.Request
+import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.VolleyError
+import com.android.volley.toolbox.Volley
 import com.ohmerhe.kolley.BuildConfig
+import com.squareup.okhttp.OkHttpClient
 import org.funktionale.partials.partially1
 import java.lang.reflect.Type
 import java.util.*
@@ -13,8 +16,8 @@ import java.util.*
 /**
  * Created by ohmer on 4/12/16.
  */
-open class BaseRequestWapper(val context: Context) {
-    internal lateinit  var _request: ByteRequest
+open class BaseRequestWapper() {
+    internal lateinit var _request: ByteRequest
     private var _method: Int = Request.Method.GET
     private var _start: (() -> Unit) = {}
     private var _success: (ByteArray) -> Unit = {}
@@ -42,15 +45,15 @@ open class BaseRequestWapper(val context: Context) {
         _finish = onFinish
     }
 
-    fun url(url: String){
+    fun url(url: String) {
         _url = url
     }
 
-    fun method(method: Int){
+    fun method(method: Int) {
         _method = method
     }
 
-    fun tag(tag: Any){
+    fun tag(tag: Any) {
         _tag = tag
     }
 
@@ -66,7 +69,7 @@ open class BaseRequestWapper(val context: Context) {
         _headers.putAll(requestPair.pairs)
     }
 
-    fun excute(){
+    fun excute() {
         var url = _url
         if (Request.Method.GET == _method) {
             url = getGetUrl(_url, _params) { it.toQueryString() }
@@ -79,10 +82,10 @@ open class BaseRequestWapper(val context: Context) {
             _success(it)
             _finish()
         }
-        if(_tag != null) {
+        if (_tag != null) {
             _request.tag = _tag
         }
-        RequestManager.getRequestQueue(context).add(_request)
+        Http.getRequestQueue().add(_request)
         _start()
     }
 
@@ -101,22 +104,36 @@ class RequestPairs {
     }
 }
 
-val request: (Int, Context, BaseRequestWapper.() -> Unit) -> Request<ByteArray> = { method, context, request ->
-    val baseRequest = BaseRequestWapper(context)
-    baseRequest.method(method)
-    baseRequest.request()
-    baseRequest.excute()
-    baseRequest._request
-}
+object Http {
+    private var mRequestQueue: RequestQueue? = null
+    fun init(context: Context) {
+        // Set up the network to use OKHttpURLConnection as the HTTP client.
+        // getApplicationContext() is key, it keeps you from leaking the
+        // Activity or BroadcastReceiver if someone passes one in.
+        mRequestQueue = Volley.newRequestQueue(context.applicationContext, OkHttpStack(OkHttpClient()))
+    }
 
-val get = request.partially1(Request.Method.GET)
-val post = request.partially1(Request.Method.POST)
-val put = request.partially1(Request.Method.PUT)
-val delete = request.partially1(Request.Method.DELETE)
-val head = request.partially1(Request.Method.HEAD)
-val options = request.partially1(Request.Method.OPTIONS)
-val trace = request.partially1(Request.Method.TRACE)
-val patch = request.partially1(Request.Method.PATCH)
+    fun getRequestQueue(): RequestQueue {
+        return mRequestQueue!!
+    }
+
+    val request: (Int, BaseRequestWapper.() -> Unit) -> Request<ByteArray> = { method, request ->
+        val baseRequest = BaseRequestWapper()
+        baseRequest.method(method)
+        baseRequest.request()
+        baseRequest.excute()
+        baseRequest._request
+    }
+
+    val get = request.partially1(Request.Method.GET)
+    val post = request.partially1(Request.Method.POST)
+    val put = request.partially1(Request.Method.PUT)
+    val delete = request.partially1(Request.Method.DELETE)
+    val head = request.partially1(Request.Method.HEAD)
+    val options = request.partially1(Request.Method.OPTIONS)
+    val trace = request.partially1(Request.Method.TRACE)
+    val patch = request.partially1(Request.Method.PATCH)
+}
 
 //fun <D> post(context: Context, request: BaseRequestWapper<D>.() -> Unit): Request<D> = request(Request.Method.POST, context,
 //        request)

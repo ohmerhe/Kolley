@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import com.ohmerhe.kolley.image.Image
-import com.ohmerhe.kolley.request.get
+import com.ohmerhe.kolley.request.Http
 import java.nio.charset.Charset
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +15,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val imageView = findViewById(R.id.image_view) as ImageView
 
-        get(this) {
+        Http.init(this)
+        Http.get {
 
             url("http://api.openweathermap.org/data/2.5/weather")
 
@@ -38,8 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        Image.config(this)
-
+        Image.init(this)
         Image.display {
             url("http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg")
             view(imageView)

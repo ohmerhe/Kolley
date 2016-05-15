@@ -23,7 +23,7 @@ object Image {
         private set
     private var mImageCache: ImageLoader.ImageCache? = null
 
-    fun config(context: Context, config: ImageLoaderConfig.Builder.() -> Unit = {}) {
+    fun init(context: Context, config: ImageLoaderConfig.Builder.() -> Unit = {}) {
         val builder = ImageLoaderConfig.Builder()
         builder.config()
         mImageLoaderConfig = builder.build()
