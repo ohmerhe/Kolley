@@ -40,7 +40,9 @@ class MainActivity : AppCompatActivity() {
 
         Image.config(this)
 
-        Image.displayImage("http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg", imageView)
-
+        Image.display {
+            url("http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg")
+            view(imageView)
+        }
     }
 }

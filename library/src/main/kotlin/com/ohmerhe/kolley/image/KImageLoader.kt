@@ -15,7 +15,7 @@ import com.squareup.okhttp.OkHttpClient
 /**
  * Created by ohmer on 1/12/16.
  */
-object Image{
+object Image {
     private var mImageLoaderConfig = ImageLoaderConfig.Builder().build()
     private val mDefaultDisplayOption = ImageDisplayOption.Builder().build()
     private var mRequestQueue: RequestQueue? = null
@@ -39,7 +39,14 @@ object Image{
         return mRequestQueue!!
     }
 
-    @JvmOverloads fun displayImage(url: String, imageView: ImageView?, displayOption: ImageDisplayOption? = mDefaultDisplayOption) {
+    fun display(init: ImageDisplayRequest.() -> Unit) {
+        val displayImageRequest = ImageDisplayRequest()
+        displayImageRequest.init()
+        displayImage(displayImageRequest._url, displayImageRequest._imageView, displayImageRequest._DisplayOption)
+    }
+
+    private fun displayImage(url: String?, imageView: ImageView?, displayOption: ImageDisplayOption? =
+    mDefaultDisplayOption) {
         var displayOption = displayOption
         if (TextUtils.isEmpty(url) || imageView == null) {
             return
@@ -51,6 +58,22 @@ object Image{
         imageLoader!!.get(url, imageListener, displayOption.maxWidth, displayOption.maxHeight, displayOption.scaleType)
     }
 
+
+    fun load(init: ImageLoadRequest.() -> Unit) {
+        val imageLoadRequst = ImageLoadRequest()
+        imageLoadRequst.init()
+        val imageListener = object : ImageListener {
+            override fun onLoadSuccess(bitmap: Bitmap) {
+                imageLoadRequst._success(bitmap)
+            }
+
+            override fun onLoadFailed(error: VolleyError) {
+                imageLoadRequst._fail(error)
+            }
+        }
+        loadImage(imageLoadRequst._url, imageListener, imageLoadRequst._ImageLoadOption)
+    }
+
     /**
      * Issues a bitmap request with the given URL if that image is not available
      * in the cache, and returns a bitmap container that contains all of the data
@@ -60,17 +83,13 @@ object Image{
      * *
      * @param imageListener The listener to call when the remote image is loaded
      * *
-     * @param maxWidth The maximum width of the returned image.
-     * *
-     * @param maxHeight The maximum height of the returned image.
-     * *
-     * @param scaleType The ImageViews ScaleType used to calculate the needed image size.
+     * @param option
      * *
      * @return A container object that contains all of the properties of the request, as well as
      * *     the currently available image (default if remote is not loaded).
      */
-    @JvmOverloads fun loadImage(requestUrl: String, imageListener: ImageListener,
-                                maxWidth: Int = 0, maxHeight: Int = 0, scaleType: ImageView.ScaleType = ImageView.ScaleType.CENTER_CROP): ImageLoader.ImageContainer {
+    private fun loadImage(requestUrl: String?, imageListener: ImageListener,
+                          option: ImageLoadRequest.ImageLoadOption): ImageLoader.ImageContainer {
         return imageLoader!!.get(requestUrl, object : ImageLoader.ImageListener {
             override fun onResponse(response: ImageLoader.ImageContainer, isImmediate: Boolean) {
                 if (response.bitmap != null) {
@@ -79,13 +98,60 @@ object Image{
             }
 
             override fun onErrorResponse(error: VolleyError) {
-                imageListener.onLoadFailed()
+                imageListener.onLoadFailed(error)
             }
-        }, maxWidth, maxHeight, scaleType)
+        }, option.maxWidth, option.maxHeight, option.scaleType)
     }
 
-    interface ImageListener {
+    private interface ImageListener {
         fun onLoadSuccess(bitmap: Bitmap)
-        fun onLoadFailed()
+        fun onLoadFailed(error: VolleyError)
     }
+}
+
+class ImageDisplayRequest {
+    internal var _DisplayOption: ImageDisplayOption? = null
+    var _imageView: ImageView? = null
+    var _url: String? = null
+
+    fun url(url: String){
+        _url = url
+    }
+
+    fun view(imageView: ImageView){
+        _imageView = imageView
+    }
+
+    fun options(option: ImageDisplayOption.Builder.() -> Unit) {
+        val builder = ImageDisplayOption.Builder()
+        builder.option()
+        _DisplayOption = builder.build()
+    }
+}
+
+class ImageLoadRequest {
+    internal var _ImageLoadOption: ImageLoadOption = ImageLoadOption()
+    var _url: String? = null
+    internal var _fail: (VolleyError) -> Unit = {}
+    internal var _success: (Bitmap) -> Unit = { }
+
+    fun options(option: ImageLoadOption.() -> Unit) {
+        _ImageLoadOption = ImageLoadOption()
+        _ImageLoadOption?.option()
+    }
+
+    fun url(url: String){
+        _url = url
+    }
+
+    fun fail(onError: (VolleyError) -> Unit) {
+        _fail = onError
+    }
+
+    fun success(onSuccess: (Bitmap) -> Unit) {
+        _success = onSuccess
+    }
+
+    data class ImageLoadOption(var maxWidth: Int = 0, var maxHeight: Int = 0, var scaleType: ImageView.ScaleType =
+    ImageView.ScaleType.CENTER_CROP)
 }
