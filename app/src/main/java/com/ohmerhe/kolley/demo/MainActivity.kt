@@ -3,6 +3,8 @@ package com.ohmerhe.kolley.demo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import com.ohmerhe.kolley.image.Image
 import com.ohmerhe.kolley.request.get
 import java.nio.charset.Charset
 
@@ -11,6 +13,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val imageView = findViewById(R.id.image_view) as ImageView
 
         get(this) {
 
@@ -34,5 +37,10 @@ class MainActivity : AppCompatActivity() {
             finish { Log.d("MainActivity", "on finish") }
 
         }
+
+        Image.config(this)
+
+        Image.displayImage("http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg", imageView)
+
     }
 }
