@@ -18,16 +18,16 @@ import java.util.*
  */
 open class BaseRequestWapper() {
     internal lateinit var _request: ByteRequest
-    private var _method: Int = Request.Method.GET
+    var url: String = ""
+    var method: Int = Request.Method.GET
     private var _start: (() -> Unit) = {}
     private var _success: (ByteArray) -> Unit = {}
     private var _fail: (VolleyError) -> Unit = {}
     private var _finish: (() -> Unit) = {}
-    private var _url: String = ""
     protected val _params: MutableMap<String, String> = HashMap() // used for a POST or PUT request.
 
     protected val _headers: MutableMap<String, String> = HashMap()
-    private var _tag: Any? = null
+    var tag: Any? = null
 
     fun onStart(onStart: () -> Unit) {
         _start = onStart
@@ -45,18 +45,6 @@ open class BaseRequestWapper() {
         _finish = onFinish
     }
 
-    fun url(url: String) {
-        _url = url
-    }
-
-    fun method(method: Int) {
-        _method = method
-    }
-
-    fun tag(tag: Any) {
-        _tag = tag
-    }
-
     fun params(makeParam: RequestPairs.() -> Unit) {
         val requestPair = RequestPairs()
         requestPair.makeParam()
@@ -70,11 +58,11 @@ open class BaseRequestWapper() {
     }
 
     fun excute() {
-        var url = _url
-        if (Request.Method.GET == _method) {
-            url = getGetUrl(_url, _params) { it.toQueryString() }
+        var url = url
+        if (Request.Method.GET == method) {
+            url = getGetUrl(url, _params) { it.toQueryString() }
         }
-        _request = ByteRequest(_method, url, Response.ErrorListener {
+        _request = ByteRequest(method, url, Response.ErrorListener {
             _fail(it)
             _finish()
         })
@@ -82,8 +70,8 @@ open class BaseRequestWapper() {
             _success(it)
             _finish()
         }
-        if (_tag != null) {
-            _request.tag = _tag
+        if (tag != null) {
+            _request.tag = tag
         }
         Http.getRequestQueue().add(_request)
         _start()
@@ -119,7 +107,7 @@ object Http {
 
     val request: (Int, BaseRequestWapper.() -> Unit) -> Request<ByteArray> = { method, request ->
         val baseRequest = BaseRequestWapper()
-        baseRequest.method(method)
+        baseRequest.method = method
         baseRequest.request()
         baseRequest.excute()
         baseRequest._request

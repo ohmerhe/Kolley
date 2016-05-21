@@ -13,12 +13,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val imageView = findViewById(R.id.image_view) as ImageView
+        val _imageView = findViewById(R.id.image_view) as ImageView
 
         Http.init(this)
         Http.get {
 
-            url("http://api.openweathermap.org/data/2.5/weather")
+            url = "http://api.openweathermap.org/data/2.5/weather"
+
+            tag = this@MainActivity
 
             params {
                 "q" - "shanghai"
@@ -41,8 +43,8 @@ class MainActivity : AppCompatActivity() {
 
         Image.init(this)
         Image.display {
-            url("http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg")
-            view(imageView)
+            url = "http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg"
+            imageView = _imageView
         }
     }
 }

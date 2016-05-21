@@ -42,7 +42,7 @@ object Image {
     fun display(init: ImageDisplayRequest.() -> Unit) {
         val displayImageRequest = ImageDisplayRequest()
         displayImageRequest.init()
-        displayImage(displayImageRequest._url, displayImageRequest._imageView, displayImageRequest._DisplayOption)
+        displayImage(displayImageRequest.url, displayImageRequest.imageView, displayImageRequest._DisplayOption)
     }
 
     private fun displayImage(url: String?, imageView: ImageView?, displayOption: ImageDisplayOption? =
@@ -71,7 +71,7 @@ object Image {
                 imageLoadRequst._fail(error)
             }
         }
-        loadImage(imageLoadRequst._url, imageListener, imageLoadRequst._ImageLoadOption)
+        loadImage(imageLoadRequst.url, imageListener, imageLoadRequst._ImageLoadOption)
     }
 
     /**
@@ -111,16 +111,8 @@ object Image {
 
 class ImageDisplayRequest {
     internal var _DisplayOption: ImageDisplayOption? = null
-    var _imageView: ImageView? = null
-    var _url: String? = null
-
-    fun url(url: String){
-        _url = url
-    }
-
-    fun view(imageView: ImageView){
-        _imageView = imageView
-    }
+    var imageView: ImageView? = null
+    var url: String? = null
 
     fun options(option: ImageDisplayOption.Builder.() -> Unit) {
         val builder = ImageDisplayOption.Builder()
@@ -131,17 +123,13 @@ class ImageDisplayRequest {
 
 class ImageLoadRequest {
     internal var _ImageLoadOption: ImageLoadOption = ImageLoadOption()
-    var _url: String? = null
+    var url: String? = null
     internal var _fail: (VolleyError) -> Unit = {}
     internal var _success: (Bitmap) -> Unit = { }
 
     fun options(option: ImageLoadOption.() -> Unit) {
         _ImageLoadOption = ImageLoadOption()
         _ImageLoadOption?.option()
-    }
-
-    fun url(url: String){
-        _url = url
     }
 
     fun onFail(onError: (VolleyError) -> Unit) {
