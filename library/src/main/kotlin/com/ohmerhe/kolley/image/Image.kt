@@ -26,10 +26,17 @@ object Image {
     fun init(context: Context, config: ImageLoaderConfig.Builder.() -> Unit = {}) {
         val builder = ImageLoaderConfig.Builder()
         builder.config()
+        checkDiskCachePath(context, builder)
         mImageLoaderConfig = builder.build()
         mRequestQueue = getRequestQueue(context.applicationContext)
         mImageCache = LRUCache(mImageLoaderConfig)
         imageLoader = ImageLoader(mRequestQueue, mImageCache)
+    }
+
+    private fun checkDiskCachePath(context: Context, configBuild: ImageLoaderConfig.Builder) {
+        if(configBuild.diskCacheEnabled && configBuild.diskCacheDir == null){
+            configBuild.diskCacheDir = Utils.getDefaultImageDiskCacheDir(context)
+        }
     }
 
     private fun getRequestQueue(context: Context): RequestQueue {
@@ -140,6 +147,6 @@ class ImageLoadRequest {
         _success = onSuccess
     }
 
-    data class ImageLoadOption(var maxWidth: Int = 0, var maxHeight: Int = 0, var scaleType: ImageView.ScaleType =
-    ImageView.ScaleType.CENTER_CROP)
+    data class ImageLoadOption(var maxWidth: Int = ImageDisplayOption.DETAULT_IMAGE_WIDTH_MAX, var maxHeight: Int =
+    ImageDisplayOption.DETAULT_IMAGE_HEIGHT_MAX, var scaleType: ImageView.ScaleType = ImageView.ScaleType.CENTER_CROP)
 }

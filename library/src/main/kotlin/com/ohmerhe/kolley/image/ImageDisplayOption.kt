@@ -30,8 +30,8 @@ class ImageDisplayOption private constructor(builder: ImageDisplayOption.Builder
         var imageResOnLoading: Int = 0
         var imageResForEmptyUri: Int = 0
         var imageResOnFail: Int = 0
-        var decodeConfig: Bitmap.Config = Bitmap.Config.RGB_565
-        var scaleType: ImageView.ScaleType = ImageView.ScaleType.CENTER_CROP
+        var decodeConfig = Bitmap.Config.RGB_565
+        var scaleType = ImageView.ScaleType.CENTER_CROP
         var maxWidth = DETAULT_IMAGE_WIDTH_MAX
         var maxHeight = DETAULT_IMAGE_HEIGHT_MAX
 
@@ -42,6 +42,6 @@ class ImageDisplayOption private constructor(builder: ImageDisplayOption.Builder
 
     companion object {
         val DETAULT_IMAGE_WIDTH_MAX = 1080
-        val DETAULT_IMAGE_HEIGHT_MAX = 1260
+        val DETAULT_IMAGE_HEIGHT_MAX = 1960
     }
 }

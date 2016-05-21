@@ -26,6 +26,12 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    packagingOptions {
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/library-compileReleaseKotlin.kotlin_module'
+    }
 }
 
 dependencies {
@@ -34,4 +40,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile project(':library')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.ohmerhe.kotlinthree:andex:0.1.4'
+
 }

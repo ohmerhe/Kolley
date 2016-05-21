@@ -214,7 +214,7 @@ object Utils {
 
     // Creates a unique subdirectory of the designated app cache directory. Tries to use external
     // but if not mounted, falls back on internal storage.
-    fun getDiskCacheDir(context: Context, uniqueName: String): File {
+    internal fun getDiskCacheDir(context: Context, uniqueName: String): File {
         // Check if media is mounted or storage is built-in, if so, try and use external cache dir
         // otherwise use internal cache dir
         val cachePath = if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState() || !isExternalStorageRemovable)
@@ -248,7 +248,7 @@ object Utils {
      * @return The external cache dir
      */
     @TargetApi(VERSION_CODES.FROYO)
-    fun getExternalCacheDir(context: Context): File {
+    internal fun getExternalCacheDir(context: Context): File {
         if (hasFroyo()) {
             return context.externalCacheDir
         }
@@ -266,7 +266,7 @@ object Utils {
      * @return The space available in bytes
      */
     @TargetApi(VERSION_CODES.GINGERBREAD)
-    fun getUsableSpace(path: File): Long {
+    internal fun getUsableSpace(path: File): Long {
         if (hasGingerbread()) {
             return path.usableSpace
         }
@@ -351,4 +351,9 @@ object Utils {
         }
         return sb.toString()
     }
+
+    fun getDefaultImageDiskCacheDir(context: Context): File?{
+        return getDiskCacheDir(context, "image")
+    }
+
 }
