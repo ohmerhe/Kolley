@@ -1,27 +1,21 @@
-## Kolley
+# Kolley
 
-Kolley is a kotlin RESTful http request framework which combine Volley with OkHttp. 
+Kolley is a kotlin RESTful http request framework which combine [Volley](https://developer.android.com/training/volley/index.html) with [OkHttp](http://square.github.io/okhttp). 
 
-## Usage
+## Standard HTTP Usage
 
 ### Quick Start
 
 start a http request easily
 
 ```
-Http.init(context) // init first
+Http.init(context) // init first, you can just init `Http` in your application
 
+// start a request anywhere
 Http.get {
-    url("http://api.openweathermap.org/data/2.5/weather")
-    params {
-        "q" - "shanghai"
-        "appid" - "xxxx"
-    }
+    url = "http://api.openweathermap.org/data/2.5/weather"
     onSuccess { bytes ->
         // handle data
-    }
-    onFail { error ->
-        // handle error
     }
 }    
 ```
@@ -40,6 +34,28 @@ Http.get {
     ...
 }
 ```   
+
+### Callback
+
+you can get callback easily like this:
+
+```
+Http.get {
+    ...
+    onStart { // do something before http request }
+
+    onSuccess { bytes ->
+        // get data
+    }
+
+    onFail { error ->
+        // handle error
+    }
+
+    onFinish { // do something after http request finished }
+    ...
+}
+```
 
 ### Headers
 
@@ -74,9 +90,96 @@ You can set tag for a request first, and then cancel it from `RequestQueue`.
 ```
 Http.get {
     ...
-    tag(tag)
+    tag = mTag
     ...
 }
 ...
 Http.getRequestQueue().cancelAll(tag)
 ```
+
+## Image Get Usage
+
+### Init First
+
+you can just simplely init `Image` in your application.
+
+```
+Image.init(context)
+```
+
+### Configuration
+
+or, you can init `Image` with configuration.
+
+```
+Image.init(this){
+    // these values are all default value , you do not need specific them if you do not want to custom
+    memoryCacheEnabled = true
+    memoryCacheSize = (Runtime.getRuntime().maxMemory() / 8).toInt()
+    diskCacheDir = File(cacheImagePath)
+    diskCacheSize = 200 * 1024 * 1024 // default 200m size
+    diskCacheEnabled = true
+    compressFormat = Bitmap.CompressFormat.JPEG
+    compressQuality = 80
+}
+```
+
+### Display Image
+
+display image directly or with custom options.
+
+```
+Image.display {
+    url = "http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg"
+    imageView = mImageView
+}
+```
+
+
+```
+Image.display {
+    url = "http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg"
+    imageView = mImageView
+    options {
+        // these values are all default value , you do not need specific them if you do not want to custom
+        imageResOnLoading = R.drawable.default_image
+        imageResOnLoading = R.drawable.default_image
+        imageResOnFail = R.drawable.default_image
+        decodeConfig = Bitmap.Config.RGB_565
+        scaleType = ImageView.ScaleType.CENTER_CROP
+        maxWidth = ImageDisplayOption.DETAULT_IMAGE_WIDTH_MAX
+        maxHeight = ImageDisplayOption.DETAULT_IMAGE_HEIGHT_MAX
+    }
+}
+```
+
+### Load Image
+
+load image directly or with options.
+
+```
+Image.load {
+    url = "http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg"
+    onSuccess { bitmap ->
+        mImageView.setImageBitmap(bitmap)
+    }
+}
+```
+
+```
+Image.load {
+    url = "http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg"
+    options {
+        scaleType = ImageView.ScaleType.CENTER_CROP
+        maxWidth = ImageDisplayOption.DETAULT_IMAGE_WIDTH_MAX
+        maxHeight = ImageDisplayOption.DETAULT_IMAGE_HEIGHT_MAX
+    }
+    onSuccess { bitmap ->
+        _imageView2?.setImageBitmap(bitmap)
+    }
+    onFail { error ->
+        log(error.toString())
+    }
+}
+```
+
