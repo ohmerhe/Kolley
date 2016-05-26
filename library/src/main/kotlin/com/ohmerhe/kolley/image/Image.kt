@@ -19,13 +19,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.text.TextUtils
 import android.widget.ImageView
-
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
 import com.ohmerhe.kolley.request.OkHttpStack
-import com.squareup.okhttp.OkHttpClient
+import okhttp3.OkHttpClient
 
 /**
  * Created by ohmer on 1/12/16.

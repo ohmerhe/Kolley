@@ -16,9 +16,8 @@
 package com.ohmerhe.kolley.request
 
 import com.android.volley.toolbox.HurlStack
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.OkUrlFactory
-
+import okhttp3.OkHttpClient
+import okhttp3.OkUrlFactory
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL

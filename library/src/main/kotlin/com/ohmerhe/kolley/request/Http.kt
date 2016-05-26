@@ -16,16 +16,13 @@
 package com.ohmerhe.kolley.request
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.Volley
-import com.ohmerhe.kolley.BuildConfig
-import com.squareup.okhttp.OkHttpClient
+import okhttp3.OkHttpClient
 import org.funktionale.partials.partially1
-import java.lang.reflect.Type
 import java.util.*
 
 /**
