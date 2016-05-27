@@ -1,6 +1,8 @@
 # Kolley
 
-Kolley is a kotlin RESTful http request framework which combine [Volley](https://developer.android.com/training/volley/index.html) with [OkHttp](http://square.github.io/okhttp). 
+Kolley is a kotlin RESTful http request framework which combine [Volley](https://developer.android.com/training/volley/index.html) with [OkHttp](http://square.github.io/okhttp).
+
+[ ![Download](https://api.bintray.com/packages/ohmerhe/maven/kolley/images/download.svg) ](https://bintray.com/ohmerhe/maven/kolley/_latestVersion)
 
 ## Standard HTTP Usage
 
