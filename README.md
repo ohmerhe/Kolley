@@ -4,6 +4,17 @@ Kolley is a kotlin RESTful http request framework which combine [Volley](https:/
 
 [ ![Download](https://api.bintray.com/packages/ohmerhe/maven/kolley/images/download.svg) ](https://bintray.com/ohmerhe/maven/kolley/_latestVersion)
 
+
+## Reference
+
+```
+repositories {
+    jcenter()
+}
+
+compile 'com.ohmerhe.kolley:kolley:0.2.0'
+```
+
 ## Standard HTTP Usage
 
 ### Quick Start
