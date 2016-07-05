@@ -1,11 +1,11 @@
 # Kolley
 
-Kolley是用kotlin实现，结合了[Volley](https://developer.android.com/training/volley/index.html)和[OkHttp](http://square.github.io/okhttp)的一个RESTful网络请求框架。
+Kolley is a kotlin RESTful http request framework which combine [Volley](https://developer.android.com/training/volley/index.html) with [OkHttp](http://square.github.io/okhttp).
 
 [ ![Download](https://api.bintray.com/packages/ohmerhe/maven/kolley/images/download.svg) ](https://bintray.com/ohmerhe/maven/kolley/_latestVersion)
 
 
-## 引用
+## Reference
 
 ```
 repositories {
@@ -15,15 +15,16 @@ repositories {
 compile 'com.ohmerhe.kolley:kolley:0.2.0'
 ```
 
-## 标准HTTP请求
+## Standard HTTP Usage
 
-### 快速使用
+### Quick Start
 
-初始化一次以后，可以很方便的发起一个网络请求。
+start a http request easily
 
 ```
-Http.init(context) 
+Http.init(context) // init first, you can just init `Http` in your application
 
+// start a request anywhere
 Http.get {
     url = "http://api.openweathermap.org/data/2.5/weather"
     onSuccess { bytes ->
@@ -32,9 +33,9 @@ Http.get {
 }    
 ```
 
-### 参数
+### Params
 
-可以在`params`配置块中使用`"key" - "value"`的格式为网络请求置顶参数，每个参数占一行。
+params can be added with `"key" - "value"` format in `params` block, each param must stay at single line.
 
 ```
 Http.get {
@@ -47,14 +48,14 @@ Http.get {
 }
 ```   
 
-### 回调
+### Callback
 
-回调也是类似配置的方式
+you can get callback easily like this:
 
 ```
 Http.get {
     ...
-    onStart {  }
+    onStart { // do something before http request }
 
     onSuccess { bytes ->
         // get data
@@ -64,14 +65,14 @@ Http.get {
         // handle error
     }
 
-    onFinish {  }
+    onFinish { // do something after http request finished }
     ...
 }
 ```
 
-### 请求Headers
+### Headers
 
-添加`headers`的方式和`params`的方式很相似
+headers info can be added like params in `headers` block.
 
 ```
 Http.get {
@@ -83,11 +84,11 @@ Http.get {
 } 
 ```
 
-### 取消
+### Cancel
 
-有两种方式可以取消网络请求
+There two ways to cancel a request.
 
-- `Request`对象直接取消
+- `Request` instance call cancel directly
 
 ```
 val request = Http.get{...}
@@ -95,9 +96,9 @@ val request = Http.get{...}
 request.cancel
 ```
 
-- 使用`tag`的方式取消
+- cancel with tag
 
-你可以为每个网络请求打上一个`tag`，然后通过`RequestQueue`取消。
+You can set tag for a request first, and then cancel it from `RequestQueue`.
 
 ```
 Http.get {
@@ -109,11 +110,11 @@ Http.get {
 Http.getRequestQueue().cancelAll(tag)
 ```
 
-## 获取图片
+## Image Get Usage
 
-### 初始化
+### Init First
 
-在你的application中直接初始化`Image`，
+you can just simplely init `Image` in your application.
 
 ```
 Image.init(context)
@@ -121,7 +122,7 @@ Image.init(context)
 
 ### Configuration
 
-或者带上一些配置信息一起初始化
+or, you can init `Image` with configuration.
 
 ```
 Image.init(this){
@@ -136,9 +137,9 @@ Image.init(this){
 }
 ```
 
-### 显示图片
+### Display Image
 
-直接显示图片或者配置化显示
+display image directly or with custom options.
 
 ```
 Image.display {
@@ -165,14 +166,16 @@ Image.display {
 }
 ```
 
-### 下载图片
+### Load Image
 
-直接下载或者配置化下载。
+load image directly or with options.
 
 ```
 Image.load {
     url = "http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg"
-    onSuccess { bitmap -> mImageView.setImageBitmap(bitmap)}
+    onSuccess { bitmap ->
+        mImageView.setImageBitmap(bitmap)
+    }
 }
 ```
 
@@ -184,7 +187,9 @@ Image.load {
         maxWidth = ImageDisplayOption.DETAULT_IMAGE_WIDTH_MAX
         maxHeight = ImageDisplayOption.DETAULT_IMAGE_HEIGHT_MAX
     }
-    onSuccess { bitmap -> _imageView2?.setImageBitmap(bitmap) }
+    onSuccess { bitmap ->
+        _imageView2?.setImageBitmap(bitmap)
+    }
     onFail { error ->
         log(error.toString())
     }
