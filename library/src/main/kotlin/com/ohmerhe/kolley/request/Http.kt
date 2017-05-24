@@ -25,10 +25,20 @@ import okhttp3.OkHttpClient
 import org.funktionale.partials.partially1
 import java.util.*
 
+class JsonRequestWrapper : BaseRequestWrapper() {
+    override fun getRequest(method: Int, url: String, errorListener: Response.ErrorListener?): ByteRequest {
+        return if (raw.isNullOrEmpty()) {
+            super.getRequest(method, url, errorListener)
+        } else {
+            JsonRequest(method, url, raw!!, errorListener)
+        }
+    }
+}
+
 /**
  * Created by ohmer on 4/12/16.
  */
-open class BaseRequestWapper() {
+open class BaseRequestWrapper {
     internal lateinit var _request: ByteRequest
     var url: String = ""
     var method: Int = Request.Method.GET
@@ -37,7 +47,7 @@ open class BaseRequestWapper() {
     private var _fail: (VolleyError) -> Unit = {}
     private var _finish: (() -> Unit) = {}
     protected val _params: MutableMap<String, String> = HashMap() // used for a POST or PUT request.
-
+    var raw: String? = null // used for a POST or PUT request.
     protected val _headers: MutableMap<String, String> = HashMap()
     var tag: Any? = null
 
@@ -74,7 +84,7 @@ open class BaseRequestWapper() {
         if (Request.Method.GET == method) {
             url = getGetUrl(url, _params) { it.toQueryString() }
         }
-        _request = ByteRequest(method, url, Response.ErrorListener {
+        _request = getRequest(method, url, Response.ErrorListener {
             _fail(it)
             _finish()
         })
@@ -87,6 +97,11 @@ open class BaseRequestWapper() {
         }
         Http.getRequestQueue().add(_request)
         _start()
+    }
+
+    open fun getRequest(method: Int, url: String, errorListener: Response.ErrorListener? = Response
+            .ErrorListener {}): ByteRequest {
+        return ByteRequest(method, url, errorListener)
     }
 
     private fun getGetUrl(url: String, params: MutableMap<String, String>, toQueryString: (map: Map<String, String>) ->
@@ -117,8 +132,11 @@ object Http {
         return mRequestQueue!!
     }
 
-    val request: (Int, BaseRequestWapper.() -> Unit) -> Request<ByteArray> = { method, request ->
-        val baseRequest = BaseRequestWapper()
+    val request: (Int, BaseRequestWrapper.() -> Unit) -> Request<ByteArray> = { method, request ->
+        val baseRequest = when(method){
+            Request.Method.POST, Request.Method.PUT -> JsonRequestWrapper()
+            else -> BaseRequestWrapper()
+        }
         baseRequest.method = method
         baseRequest.request()
         baseRequest.excute()

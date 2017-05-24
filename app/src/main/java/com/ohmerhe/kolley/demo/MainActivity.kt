@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import com.kotlinthree.andex.component.findView
+import com.kotlinthree.andex.handler.post
 import com.ohmerhe.kolley.image.Image
 import com.ohmerhe.kolley.image.ImageDisplayOption
 import com.ohmerhe.kolley.request.Http
@@ -36,35 +37,35 @@ class MainActivity : AppCompatActivity() {
         val _imageView2: ImageView? = findView(R.id.image_view2)
 
         Http.init(this)
-        Http.get {
-
-            url = "http://api.openweathermap.org/data/2.5/weather"
-
-            tag = this@MainActivity
-
-            params {
-                "q" - "shanghai"
-                "appid" - "d7a98cf22463b1c0c3df4adfe5abbc77"
-            }
-
-            onStart { log("on start") }
-
-            onSuccess { bytes ->
-                log("on success ${bytes.toString(Charset.defaultCharset())}")
-            }
-
-            onFail { error ->
-                log("on fail ${error.toString()}")
-            }
-
-            onFinish { log( "on finish") }
-
-        }
+//        Http.get {
+//
+//            url = "http://api.openweathermap.org/data/2.5/weather"
+//
+//            tag = this@MainActivity
+//
+//            params {
+//                "q" - "shanghai"
+//                "appid" - "d7a98cf22463b1c0c3df4adfe5abbc77"
+//            }
+//
+//            onStart { log("on start") }
+//
+//            onSuccess { bytes ->
+//                log("on success ${bytes.toString(Charset.defaultCharset())}")
+//            }
+//
+//            onFail { error ->
+//                log("on fail ${error.toString()}")
+//            }
+//
+//            onFinish { log( "on finish") }
+//
+//        }
 
         val cacheImagePath = "$externalCacheDir/image/"
         log("cacheImagePath = $cacheImagePath")
 
-        Image.init(this){
+        Image.init(this) {
             // these values are all default value , you do not need specific them if you do not want to custom
             memoryCacheEnabled = true
             memoryCacheSize = (Runtime.getRuntime().maxMemory() / 8).toInt()
@@ -90,6 +91,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        Http.post {
+            url = "http://192.168.199.110:3000"
+            raw = "{\"key\":\"value\"}"
+
+            onSuccess {
+                log("on success ${it.toString(Charset.defaultCharset())}")
+            }
+        }
+
         Image.load {
             url = "http://7xpox6.com1.z0.glb.clouddn.com/android_bg.jpg"
             options {
@@ -106,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun log(text: String){
+    fun log(text: String) {
         Log.d("MainActivity", text)
     }
 }

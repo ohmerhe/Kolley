@@ -26,7 +26,7 @@ import java.util.*
 /**
  * Created by ohmer on 4/14/16.
  */
-class ByteRequest(method: Int, url: String, errorListener: Response.ErrorListener? = Response.ErrorListener {})
+open class ByteRequest(method: Int, url: String, errorListener: Response.ErrorListener? = Response.ErrorListener {})
 : BaseRequest<ByteArray>(method, url, errorListener) {
     override fun parseNetworkResponse(response: NetworkResponse?): Response<ByteArray>? {
         return Response.success(response?.data, HttpHeaderParser.parseCacheHeaders(response))
