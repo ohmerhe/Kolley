@@ -12,8 +12,14 @@ repositories {
     jcenter()
 }
 
-compile 'com.ohmerhe.kolley:kolley:0.2.0'
+compile 'com.ohmerhe.kolley:kolley:0.3.0'
 ```
+
+## 0.3.0
+
+- 支持 Post 请求上传 Raw
+- 支持 upload 文件
+- 修复请求中没有传递 Header 的bug
 
 ## 标准HTTP请求
 
@@ -108,6 +114,23 @@ Http.get {
 ...
 Http.getRequestQueue().cancelAll(tag)
 ```
+
+## 上传文件
+
+将需要上传的文件添加到 `files` 下面，参数形式和 `params` 一直，前面是 `key`，后面的 `value` 是对应文件的路径。
+可支持多文件上传。
+
+```
+Http.upload{
+    url = "http://192.168.199.110:3000"
+    files {
+        "image" - $imagePath
+    }
+}
+```
+
+如果上传文件需要带其他参数，也可以和其他网络请求一样添加在 `params` 下面。
+
 
 ## 获取图片
 

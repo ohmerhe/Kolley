@@ -54,7 +54,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.1'
-    compile project(':library')
+//    compile project(':library')
+    compile 'com.ohmerhe.kolley:kolley:0.3.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.ohmerhe.kotlinthree:andex:0.1.9'
 
