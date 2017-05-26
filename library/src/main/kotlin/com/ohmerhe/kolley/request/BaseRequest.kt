@@ -38,6 +38,7 @@ abstract class BaseRequest<D>(method: Int, url: String, errorListener: Response.
     protected val DEFAULT_CHARSET = "UTF-8"
 
     internal var _listener: Response.Listener<D>? = null
+    protected val _heads: MutableMap<String, String> = mutableMapOf()
     protected val _params: MutableMap<String, String> = mutableMapOf() // used for a POST or PUT request.
 
     /**
@@ -46,6 +47,18 @@ abstract class BaseRequest<D>(method: Int, url: String, errorListener: Response.
      */
     public override fun getParams(): MutableMap<String, String> {
         return _params
+    }
+
+    override fun getHeaders(): MutableMap<String, String> {
+        return _heads
+    }
+
+    fun setHeaders(heads: MutableMap<String, String>){
+        _heads.putAll(heads)
+    }
+
+    fun setParams(params: MutableMap<String, String>){
+        _params.putAll(params)
     }
 
     override fun deliverResponse(response: D?) {

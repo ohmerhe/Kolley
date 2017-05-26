@@ -100,10 +100,15 @@ open class RequestWrapper {
         if (tag != null) {
             request.tag = tag
         }
+        // 添加 headers
+        request.headers = _headers
+        // 设置 params
+        request.params = _params
+
         if (request is UploadRequest){
             request.fileParams = _fileParams
         }
-        // 添加 header
+
     }
 
     open fun getRequest(method: Int, url: String, errorListener: Response.ErrorListener? = Response
