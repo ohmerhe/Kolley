@@ -21,24 +21,15 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.Volley
+import com.ohmerhe.kolley.upload.UploadRequest
 import okhttp3.OkHttpClient
 import org.funktionale.partials.partially1
 import java.util.*
 
-class JsonRequestWrapper : BaseRequestWrapper() {
-    override fun getRequest(method: Int, url: String, errorListener: Response.ErrorListener?): ByteRequest {
-        return if (raw.isNullOrEmpty()) {
-            super.getRequest(method, url, errorListener)
-        } else {
-            JsonRequest(method, url, raw!!, errorListener)
-        }
-    }
-}
-
 /**
  * Created by ohmer on 4/12/16.
  */
-open class BaseRequestWrapper {
+open class RequestWrapper {
     internal lateinit var _request: ByteRequest
     var url: String = ""
     var method: Int = Request.Method.GET
@@ -46,9 +37,10 @@ open class BaseRequestWrapper {
     private var _success: (ByteArray) -> Unit = {}
     private var _fail: (VolleyError) -> Unit = {}
     private var _finish: (() -> Unit) = {}
-    protected val _params: MutableMap<String, String> = HashMap() // used for a POST or PUT request.
+    protected val _params: MutableMap<String, String> = mutableMapOf() // used for a POST or PUT request.
+    protected val _fileParams: MutableMap<String, String> = mutableMapOf() // used for a POST or PUT request.
     var raw: String? = null // used for a POST or PUT request.
-    protected val _headers: MutableMap<String, String> = HashMap()
+    protected val _headers: MutableMap<String, String> = mutableMapOf()
     var tag: Any? = null
 
     fun onStart(onStart: () -> Unit) {
@@ -79,6 +71,12 @@ open class BaseRequestWrapper {
         _headers.putAll(requestPair.pairs)
     }
 
+    fun files(makeFileParams: RequestPairs.() -> Unit) {
+        val requestPair = RequestPairs()
+        requestPair.makeFileParams()
+        _fileParams.putAll(requestPair.pairs)
+    }
+
     fun excute() {
         var url = url
         if (Request.Method.GET == method) {
@@ -92,21 +90,36 @@ open class BaseRequestWrapper {
             _success(it)
             _finish()
         }
-        if (tag != null) {
-            _request.tag = tag
-        }
+        fillRequest()
         Http.getRequestQueue().add(_request)
         _start()
     }
 
+    open fun fillRequest() {
+        val request = _request
+        if (tag != null) {
+            request.tag = tag
+        }
+        if (request is UploadRequest){
+            request.fileParams = _fileParams
+        }
+        // 添加 header
+    }
+
     open fun getRequest(method: Int, url: String, errorListener: Response.ErrorListener? = Response
             .ErrorListener {}): ByteRequest {
-        return ByteRequest(method, url, errorListener)
+        return if (!raw.isNullOrEmpty() && method in Request.Method.POST..Request.Method.PUT) {
+            JsonRequest(method, url, raw!!, errorListener)
+        } else if (method == Request.Method.POST && _fileParams.isNotEmpty()) {
+            UploadRequest(url, errorListener)
+        }else{
+            ByteRequest(method, url, errorListener)
+        }
     }
 
     private fun getGetUrl(url: String, params: MutableMap<String, String>, toQueryString: (map: Map<String, String>) ->
     String): String {
-        return if (params == null || params.isEmpty()) url else "$url?${toQueryString(params)}"
+        return if (params.isEmpty()) url else "$url?${toQueryString(params)}"
     }
 
     private fun <K, V> Map<K, V>.toQueryString(): String = this.map { "${it.key}=${it.value}" }.joinToString("&")
@@ -132,15 +145,12 @@ object Http {
         return mRequestQueue!!
     }
 
-    val request: (Int, BaseRequestWrapper.() -> Unit) -> Request<ByteArray> = { method, request ->
-        val baseRequest = when(method){
-            Request.Method.POST, Request.Method.PUT -> JsonRequestWrapper()
-            else -> BaseRequestWrapper()
-        }
+    val request: (Int, RequestWrapper.() -> Unit) -> Request<ByteArray> = { method, init ->
+        val baseRequest =RequestWrapper()
         baseRequest.method = method
-        baseRequest.request()
-        baseRequest.excute()
-        baseRequest._request
+        baseRequest.init() // 执行闭包，完成数据填充
+        baseRequest.excute() // 添加到执行队列，自动执行
+        baseRequest._request // 用于返回
     }
 
     val get = request.partially1(Request.Method.GET)
@@ -151,6 +161,7 @@ object Http {
     val options = request.partially1(Request.Method.OPTIONS)
     val trace = request.partially1(Request.Method.TRACE)
     val patch = request.partially1(Request.Method.PATCH)
+    val upload = request.partially1(Request.Method.POST)
 }
 
 //fun <D> post(context: Context, request: BaseRequestWapper<D>.() -> Unit): Request<D> = request(Request.Method.POST, context,

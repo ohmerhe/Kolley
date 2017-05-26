@@ -19,48 +19,54 @@ import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import com.kotlinthree.andex.component.findView
-import com.kotlinthree.andex.handler.post
 import com.ohmerhe.kolley.image.Image
 import com.ohmerhe.kolley.image.ImageDisplayOption
 import com.ohmerhe.kolley.request.Http
 import java.io.File
 import java.nio.charset.Charset
+import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
+import android.provider.MediaStore
+
 
 class MainActivity : AppCompatActivity() {
-
+    val RESULT_LOAD_IMAGE = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val _imageView: ImageView? = findView(R.id.image_view)
         val _imageView2: ImageView? = findView(R.id.image_view2)
+        val upload: Button = findView(R.id.upload)
 
         Http.init(this)
-//        Http.get {
-//
-//            url = "http://api.openweathermap.org/data/2.5/weather"
-//
-//            tag = this@MainActivity
-//
-//            params {
-//                "q" - "shanghai"
-//                "appid" - "d7a98cf22463b1c0c3df4adfe5abbc77"
-//            }
-//
-//            onStart { log("on start") }
-//
-//            onSuccess { bytes ->
-//                log("on success ${bytes.toString(Charset.defaultCharset())}")
-//            }
-//
-//            onFail { error ->
-//                log("on fail ${error.toString()}")
-//            }
-//
-//            onFinish { log( "on finish") }
-//
-//        }
+        Http.get {
+
+            url = "http://api.openweathermap.org/data/2.5/weather"
+
+            tag = this@MainActivity
+
+            params {
+                "q" - "shanghai"
+                "appid" - "d7a98cf22463b1c0c3df4adfe5abbc77"
+            }
+
+            onStart { log("on start") }
+
+            onSuccess { bytes ->
+                log("on success ${bytes.toString(Charset.defaultCharset())}")
+            }
+
+            onFail { error ->
+                log("on fail ${error.toString()}")
+            }
+
+            onFinish { log( "on finish") }
+
+        }
 
         val cacheImagePath = "$externalCacheDir/image/"
         log("cacheImagePath = $cacheImagePath")
@@ -114,7 +120,48 @@ class MainActivity : AppCompatActivity() {
                 log(error.toString())
             }
         }
+
+        upload.setOnClickListener {
+            val i = Intent(
+                    Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+
+            startActivityForResult(i, RESULT_LOAD_IMAGE)
+        }
+
+
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            val selectedImage = data.data
+            val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+            val cursor = contentResolver.query(selectedImage, filePathColumn, null, null, null)
+            cursor.moveToFirst()
+            val columnIndex = cursor.getColumnIndex(filePathColumn[0])
+            val picturePath = cursor.getString(columnIndex)
+            cursor.close()
+            uploadImage(picturePath!!)
+
+            // String picturePath contains the path of selected Image
+        }
+    }
+
+    private fun uploadImage(picturePath: String) {
+        Http.upload{
+            url = "http://192.168.199.110:3000"
+            files {
+                "image" - picturePath
+            }
+            onSuccess {
+                log("on success ${it.toString(Charset.defaultCharset())}")
+            }
+            onFail { error ->
+                log("on fail ${error.toString()}")
+            }
+        }
+    }
+
 
     fun log(text: String) {
         Log.d("MainActivity", text)

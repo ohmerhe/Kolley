@@ -34,8 +34,6 @@ import java.security.NoSuchAlgorithmException
  * Class containing some static utility methods.
  */
 object Utils {
-
-
     @TargetApi(VERSION_CODES.HONEYCOMB)
     fun enableStrictMode() {
         if (Utils.hasGingerbread()) {
@@ -326,7 +324,7 @@ object Utils {
      * disk filename.
      */
     fun hashKeyForDisk(key: String): String {
-        val cacheKey: String
+        var cacheKey: String
         try {
             val mDigest = MessageDigest.getInstance("MD5")
             mDigest.update(key.toByteArray())

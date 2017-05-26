@@ -38,7 +38,7 @@ abstract class BaseRequest<D>(method: Int, url: String, errorListener: Response.
     protected val DEFAULT_CHARSET = "UTF-8"
 
     internal var _listener: Response.Listener<D>? = null
-    protected val _params: MutableMap<String, String> = HashMap() // used for a POST or PUT request.
+    protected val _params: MutableMap<String, String> = mutableMapOf() // used for a POST or PUT request.
 
     /**
      * Returns a Map of parameters to be used for a POST or PUT request.

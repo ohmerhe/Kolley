@@ -46,6 +46,7 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/license.txt'
         exclude 'META-INF/library-compileReleaseKotlin.kotlin_module'
+        exclude 'META-INF/library_release.kotlin_module'
     }
 }
 
@@ -55,6 +56,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile project(':library')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.ohmerhe.kotlinthree:andex:0.1.4'
+    compile 'com.ohmerhe.kotlinthree:andex:0.1.9'
 
 }
