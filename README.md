@@ -1,8 +1,10 @@
 # Kolley
 
-Kolley是用kotlin实现，结合了[Volley](https://developer.android.com/training/volley/index.html)和[OkHttp](http://square.github.io/okhttp)的一个RESTful网络请求框架。
+Kolley是用 kotlin 实现，结合了[Volley](https://developer.android.com/training/volley/index.html)和[OkHttp](http://square.github.io/okhttp)的一个RESTful网络请求框架。
 
 [ ![Download](https://api.bintray.com/packages/ohmerhe/maven/kolley/images/download.svg) ](https://bintray.com/ohmerhe/maven/kolley/_latestVersion)
+
+[English](https://github.com/ohmerhe/Kolley/blob/master/README_EN.md)
 
 
 ## 引用

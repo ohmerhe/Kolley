@@ -12,8 +12,14 @@ repositories {
     jcenter()
 }
 
-compile 'com.ohmerhe.kolley:kolley:0.2.0'
+compile 'com.ohmerhe.kolley:kolley:0.3.0'
 ```
+
+## 0.3.0
+
+- support raw post
+- support upload files
+- fix without headers bug
 
 ## Standard HTTP Usage
 
@@ -108,6 +114,17 @@ Http.get {
 }
 ...
 Http.getRequestQueue().cancelAll(tag)
+```
+
+## Upload
+
+```
+Http.upload{
+    url = "http://192.168.199.110:3000"
+    files {
+        "image" - $imagePath
+    }
+}
 ```
 
 ## Image Get Usage
