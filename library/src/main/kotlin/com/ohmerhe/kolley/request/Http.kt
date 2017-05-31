@@ -31,17 +31,18 @@ import java.util.*
  */
 open class RequestWrapper {
     internal lateinit var _request: ByteRequest
-    var url: String = ""
     var method: Int = Request.Method.GET
+    var url: String = ""
+    var raw: String? = null // used for a POST or PUT request.
+    var tag: Any? = null
     private var _start: (() -> Unit) = {}
     private var _success: (ByteArray) -> Unit = {}
     private var _fail: (VolleyError) -> Unit = {}
     private var _finish: (() -> Unit) = {}
     protected val _params: MutableMap<String, String> = mutableMapOf() // used for a POST or PUT request.
     protected val _fileParams: MutableMap<String, String> = mutableMapOf() // used for a POST or PUT request.
-    var raw: String? = null // used for a POST or PUT request.
     protected val _headers: MutableMap<String, String> = mutableMapOf()
-    var tag: Any? = null
+    
 
     fun onStart(onStart: () -> Unit) {
         _start = onStart
@@ -59,23 +60,15 @@ open class RequestWrapper {
         _finish = onFinish
     }
 
-    fun params(makeParam: RequestPairs.() -> Unit) {
+    val pairs = fun (map: MutableMap<String,String>, makePairs: RequestPairs.() -> Unit){
         val requestPair = RequestPairs()
-        requestPair.makeParam()
-        _params.putAll(requestPair.pairs)
+        requestPair.makePairs()
+        map.putAll(requestPair.pairs)
     }
 
-    fun headers(makeHeader: RequestPairs.() -> Unit) {
-        val requestPair = RequestPairs()
-        requestPair.makeHeader()
-        _headers.putAll(requestPair.pairs)
-    }
-
-    fun files(makeFileParams: RequestPairs.() -> Unit) {
-        val requestPair = RequestPairs()
-        requestPair.makeFileParams()
-        _fileParams.putAll(requestPair.pairs)
-    }
+    val params = pairs.partially1(_params)
+    val headers = pairs.partially1(_headers)
+    val files = pairs.partially1(_fileParams)
 
     fun excute() {
         var url = url
