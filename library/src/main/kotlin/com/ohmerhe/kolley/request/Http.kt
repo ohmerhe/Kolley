@@ -25,6 +25,12 @@ import com.ohmerhe.kolley.upload.UploadRequest
 import okhttp3.OkHttpClient
 import org.funktionale.partials.partially1
 import java.util.*
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache
+import com.franmontiel.persistentcookiejar.PersistentCookieJar
+import com.franmontiel.persistentcookiejar.ClearableCookieJar
+
+
 
 /**
  * Created by ohmer on 4/12/16.
@@ -136,7 +142,11 @@ object Http {
         // Set up the network to use OKHttpURLConnection as the HTTP client.
         // getApplicationContext() is key, it keeps you from leaking the
         // Activity or BroadcastReceiver if someone passes one in.
-        mRequestQueue = Volley.newRequestQueue(context.applicationContext, OkHttpStack(OkHttpClient()))
+        val cookieJar = PersistentCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(context))
+        val okHttpClient = OkHttpClient.Builder()
+                .cookieJar(cookieJar)
+                .build()
+        mRequestQueue = Volley.newRequestQueue(context.applicationContext, OkHttpStack(okHttpClient))
     }
 
     fun getRequestQueue(): RequestQueue {
