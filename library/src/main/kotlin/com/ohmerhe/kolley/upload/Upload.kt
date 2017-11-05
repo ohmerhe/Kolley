@@ -94,36 +94,36 @@ class UploadRequest(url: String, errorListener: Response.ErrorListener?)
         }
 
         // close multipart form data after text and file data
-        dos.writeBytes(boundaryPrefixed + MultipartUtils.BOUNDARY_PREFIX)
-        dos.writeBytes(MultipartUtils.CRLF)
+        dos.write((boundaryPrefixed + MultipartUtils.BOUNDARY_PREFIX).toByteArray())
+        dos.write(MultipartUtils.CRLF.toByteArray())
     }
 
     @Throws(IOException::class)
     private fun buildStringPart(dataOutputStream: DataOutputStream, key: String, value: String) {
 
-        dataOutputStream.writeBytes(boundaryPrefixed)
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
-        dataOutputStream.writeBytes(String.format(MultipartUtils.HEADER_CONTENT_DISPOSITION + MultipartUtils.COLON_SPACE + MultipartUtils.FORM_DATA, key))
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
-        dataOutputStream.writeBytes(MultipartUtils.HEADER_CONTENT_TYPE + MultipartUtils.COLON_SPACE + MultipartUtils.CONTENT_TYPE_TEXT_PLAIN)
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
-        dataOutputStream.writeBytes(value)
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
+        dataOutputStream.write(boundaryPrefixed?.toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
+        dataOutputStream.write(String.format(MultipartUtils.HEADER_CONTENT_DISPOSITION + MultipartUtils.COLON_SPACE + MultipartUtils.FORM_DATA, key).toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
+        dataOutputStream.write((MultipartUtils.HEADER_CONTENT_TYPE + MultipartUtils.COLON_SPACE + MultipartUtils.CONTENT_TYPE_TEXT_PLAIN).toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
+        dataOutputStream.write(value.toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
     }
 
     @Throws(IOException::class)
     private fun buildDataPart(dataOutputStream: DataOutputStream, key: String, file: File) {
 
-        dataOutputStream.writeBytes(boundaryPrefixed)
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
-        dataOutputStream.writeBytes(String.format(MultipartUtils.HEADER_CONTENT_DISPOSITION + MultipartUtils.COLON_SPACE + MultipartUtils.FORM_DATA + MultipartUtils.SEMICOLON_SPACE + MultipartUtils.FILENAME, key, file.name))
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
-        dataOutputStream.writeBytes(MultipartUtils.HEADER_CONTENT_TYPE + MultipartUtils.COLON_SPACE + MultipartUtils.CONTENT_TYPE_OCTET_STREAM)
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
-        dataOutputStream.writeBytes(MultipartUtils.HEADER_CONTENT_TRANSFER_ENCODING + MultipartUtils.COLON_SPACE + Types.BINARY)
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
+        dataOutputStream.write(boundaryPrefixed?.toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
+        dataOutputStream.write(String.format(MultipartUtils.HEADER_CONTENT_DISPOSITION + MultipartUtils.COLON_SPACE + MultipartUtils.FORM_DATA + MultipartUtils.SEMICOLON_SPACE + MultipartUtils.FILENAME, key, file.name).toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
+        dataOutputStream.write((MultipartUtils.HEADER_CONTENT_TYPE + MultipartUtils.COLON_SPACE + MultipartUtils.CONTENT_TYPE_OCTET_STREAM).toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
+        dataOutputStream.write((MultipartUtils.HEADER_CONTENT_TRANSFER_ENCODING + MultipartUtils.COLON_SPACE + Types.BINARY).toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
 
         val fileInputStream = FileInputStream(file)
         var bytesAvailable = fileInputStream.available()
@@ -141,6 +141,6 @@ class UploadRequest(url: String, errorListener: Response.ErrorListener?)
             bytesRead = fileInputStream.read(buffer, 0, bufferSize)
         }
 
-        dataOutputStream.writeBytes(MultipartUtils.CRLF)
+        dataOutputStream.write(MultipartUtils.CRLF.toByteArray())
     }
 }

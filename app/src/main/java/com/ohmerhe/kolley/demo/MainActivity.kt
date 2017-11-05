@@ -150,6 +150,9 @@ class MainActivity : AppCompatActivity() {
     private fun uploadImage(picturePath: String) {
         Http.upload{
             url = "http://192.168.199.110:3000"
+            params {
+                "test" - "中文测试"
+            }
             files {
                 "image" - picturePath
             }
