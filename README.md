@@ -17,6 +17,11 @@ repositories {
 compile 'com.ohmerhe.kolley:kolley:0.3.0'
 ```
 
+## 0.3.1
+
+- 支持 Cookie 持久化储存
+- 修复上传中中文乱码的问题
+
 ## 0.3.0
 
 - 支持 Post 请求上传 Raw
