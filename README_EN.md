@@ -10,10 +10,16 @@ Kolley is a kotlin RESTful http request framework which combine [Volley](https:/
 ```
 repositories {
     jcenter()
+    maven { url "https://jitpack.io" } // for PersistentCookieJar
 }
 
-compile 'com.ohmerhe.kolley:kolley:0.3.0'
+compile 'com.ohmerhe.kolley:kolley:0.3.1'
 ```
+
+## 0.3.1
+
+- support persistent cookie 
+- fix bug for chinese chars
 
 ## 0.3.0
 

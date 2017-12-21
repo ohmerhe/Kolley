@@ -12,9 +12,10 @@ Kolley是用 kotlin 实现，结合了[Volley](https://developer.android.com/tra
 ```
 repositories {
     jcenter()
+    maven { url "https://jitpack.io" } // for PersistentCookieJar
 }
 
-compile 'com.ohmerhe.kolley:kolley:0.3.0'
+compile 'com.ohmerhe.kolley:kolley:0.3.1'
 ```
 
 ## 0.3.1
